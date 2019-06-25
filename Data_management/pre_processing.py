@@ -1,0 +1,50 @@
+import numpy as np
+
+
+
+def read_jpg_train(file):
+    '''Read and returns PIL image and type'''
+    
+    # open path as file to avoid ResourceWarning (https://github.com/python-pillow/Pillow/issues/835)
+    with open(file, 'rb') as f:
+        img = Image.open(f).convert('RGB')
+
+        type_ = img.mode
+
+    return img, type_
+
+
+
+# Llegim fitxer partition
+labels = np.load('Data_management/labels_img.npy').item()
+imgs = np.load('Data_management/partition_img.npy').item()['train']
+
+means = []
+stds = []
+widths = []
+heights = []
+for file in imgs:
+
+	img, type_ = read_jpg_train(file)
+	width, height = img.size
+	img = np.array(img, dtype = float)
+
+	n_channels, width_ ,height = rgb.shape
+	flatten_img = rgb.reshape(n_channels,width_*height)
+
+	try:
+		means.append(np.mean(flatten_img,axis=1))
+		stds.append(np.std(flatten_img,axis=1))
+	except Exception as e:
+		print(e)
+	# Let's get means and stds: (rank [0-1])
+
+
+means = np.array(means)
+stds = np.array(stds)
+
+global_mean = np.mean(means,axis = 0)
+global_std = np.mean(stds,axis = 0)
+
+print("Means: {}".format(global_mean))
+print("STDs: {}".format(global_std))
