@@ -29,7 +29,7 @@ def save_partition(data,labels,name):
 
 
 
-path = '../../Data_img/'
+path = '/mnt/disks/dades/train/'
 files = read_from_folder(path)
 
 labels = []
