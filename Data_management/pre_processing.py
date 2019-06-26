@@ -42,11 +42,6 @@ for _i, file in enumerate(imgs):
 		print(e)
 
 
-	print("Means",means)
-	print("width: {}, height: {}".format(width, height))
-	if _i == 1:
-		break
-
 
 means = np.array(means)
 stds = np.array(stds)
