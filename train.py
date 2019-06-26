@@ -175,7 +175,7 @@ img_part_val_net =  [img for img in img_part_val if img.split('.')[-1]  in ('jpg
 dataset_val = Dataset(img_part_val_net,labels, is_train = False)
 
 # Parameters
-params = {'batch_size': 64 ,
+params = {'batch_size': 128 ,
           'shuffle': True,
           'num_workers': 12,
           'pin_memory': True}
