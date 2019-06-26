@@ -27,8 +27,8 @@ for _i, file in enumerate(imgs):
 
 	img, type_ = read_jpg_train(file)
 	width, height = img.size
-	widths.append(widths)
-	heights.append(heights)
+	widths.append(width)
+	heights.append(height)
 	img = np.array(img, dtype = float)/255.0
 	width_ ,height, n_channels = img.shape
 	flatten_img = img.reshape(n_channels,width_*height)
