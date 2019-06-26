@@ -39,7 +39,7 @@ for _i, file in enumerate(imgs):
 	except Exception as e:
 		print(e)
 
-	if _i%0 == 1:
+	if _i == 1:
 		print("Means",means)
 		print("width: {}, height: {}".format(width, height))
 
