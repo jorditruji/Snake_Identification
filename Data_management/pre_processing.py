@@ -27,6 +27,7 @@ for _i, file in enumerate(imgs):
 
 	img, type_ = read_jpg_train(file)
 	width, height = img.size
+	print(img.size)
 	widths.append(width)
 	heights.append(height)
 	img = np.array(img, dtype = float)/255.0
