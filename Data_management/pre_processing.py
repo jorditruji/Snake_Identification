@@ -54,6 +54,7 @@ global_std = np.mean(stds,axis = 0)
 print("Means: {}".format(global_mean))
 print("STDs: {}".format(global_std))
 
-
+print("Saving")
+print(heights, widths)
 np.save('heights.npy', heights)
 np.save('widths.npy', widths)
