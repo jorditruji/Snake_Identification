@@ -1,5 +1,5 @@
 import numpy as np
-
+from PIL import Image
 
 
 def read_jpg_train(file):
@@ -16,8 +16,8 @@ def read_jpg_train(file):
 
 
 # Llegim fitxer partition
-labels = np.load('Data_management/labels_img.npy').item()
-imgs = np.load('Data_management/partition_img.npy').item()['train']
+labels = np.load('labels_img.npy').item()
+imgs = np.load('partition_img.npy').item()['train']
 
 means = []
 stds = []
@@ -27,10 +27,10 @@ for file in imgs:
 
 	img, type_ = read_jpg_train(file)
 	width, height = img.size
-	img = np.array(img/255, dtype = float)
+	img = np.array(img, dtype = float)/255.0
 
-	n_channels, width_ ,height = rgb.shape
-	flatten_img = rgb.reshape(n_channels,width_*height)
+	n_channels, width_ ,height = img.shape
+	flatten_img = img.reshape(n_channels,width_*height)
 	print(img.shape, flatten_img.shape )
 
 	try:
