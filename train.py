@@ -175,7 +175,7 @@ img_part_val_net =  [img for img in img_part_val if img.split('.')[-1]  in ('jpg
 dataset_val = Dataset(img_part_val_net,labels, is_train = False)
 
 # Parameters
-params = {'batch_size': 128 ,
+params = {'batch_size': 256 ,
           'shuffle': True,
           'num_workers': 12,
           'pin_memory': True}
@@ -216,11 +216,12 @@ else:
 	criterion = nn.CrossEntropyLoss()
 
 #optimizer_ft = optim.Adam(model_ft.parameters(), lr=2e-4)
-optimizer_ft = torch.optim.Adam(model_ft.parameters(), lr=2e-4, betas=(0.9, 0.999), eps=1e-08, weight_decay=4e-5)
+optimizer_ft = optim.SGD(model_ft.parameters(), lr=0.001, momentum=0.9)
+#optimizer_ft = torch.optim.Adam(model_ft.parameters(), lr=2e-4, betas=(0.9, 0.999), eps=1e-08, weight_decay=4e-5)
 #exp_lr_scheduler = lr_scheduler.StepLR(optimizer_ft, step_size=6, gamma=0.5)
-
+exp_lr_scheduler = lr_scheduler.StepLR(optimizer_ft, step_size=7, gamma=0.1)
 res,val_labels, predicts, data_actual = train(model_ft, criterion, optimizer_ft, 
-	training_generator, val_generator, regularize = False, n_epochs= 13, lr_scheduler=None) 
+	training_generator, val_generator, regularize = False, n_epochs= 13, lr_scheduler=exp_lr_scheduler) 
 
 '''exp_lr_scheduler)'''
 
