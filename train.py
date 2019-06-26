@@ -149,13 +149,13 @@ if torch.cuda.is_available():
 else:
 	torch.manual_seed(1993)
 # Create dataset
-labels = np.load('Data_utils/labels_img.npy').item()
-img_part_train = np.load('Data_utils/partition_img.npy').item()['train']
+labels = np.load('Data_management/labels_img.npy').item()
+img_part_train = np.load('Data_management/partition_img.npy').item()['train']
 img_part_train_net = [img for img in img_part_train if img.split('.')[-1]  in ('jpg','png')]
 
 dataset = Dataset(img_part_train_net,labels)
 
-img_part_val = np.load('Data_utils/partition_img.npy').item()['validation']
+img_part_val = np.load('Data_management/partition_img.npy').item()['validation']
 img_part_val_net =  [img for img in img_part_val if img.split('.')[-1]  in ('jpg','png')]
 
 dataset_val = Dataset(img_part_val_net,labels, is_train = False)
