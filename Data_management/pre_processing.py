@@ -1,6 +1,6 @@
 import numpy as np
 from PIL import Image
-
+from .dataset import Dataset
 
 def read_jpg_train(file):
     '''Read and returns PIL image and type'''
@@ -18,28 +18,37 @@ def read_jpg_train(file):
 # Llegim fitxer partition
 labels = np.load('labels_img.npy').item()
 imgs = np.load('partition_img.npy').item()['train']
+# Create dataset instance
+dataset = Dataset(img_part_train_net,labels)
+
+
+# Parameters of the generator
+params = {'batch_size': 32,
+          'shuffle': True,
+          'num_workers': 12,
+          'pin_memory': True}
+
+
+# Create data loaders
+training_generator = data.DataLoader(dataset,**params)
+
+
 
 means = []
 stds = []
-widths = []
-heights = []
-for _i, file in enumerate(imgs):
 
-	img, type_ = read_jpg_train(file)
-	width, height = img.size
-	print(img.size)
-	widths.append(width)
-	heights.append(height)
-	img = np.array(img, dtype = float)/255.0
-	print(img.shape)
-	height_, width_, n_channels = img.shape
-	flatten_img = img.reshape(n_channels,width*height)
-	print(flatten_img.shape)
+for rgb, label in training_generator:
+	label = label.numpy()
+	rgb = rgb.numpy()
+	b_size, n_channels, width_ ,height = rgb.shape
+	flatten_img = rgb.reshape(n_channels,width_*height)
 	try:
 		means.append(np.mean(flatten_img,axis=1))
 		stds.append(np.std(flatten_img,axis=1))
 	except Exception as e:
 		print(e)
+
+
 
 
 
@@ -52,7 +61,3 @@ global_std = np.mean(stds,axis = 0)
 print("Means: {}".format(global_mean))
 print("STDs: {}".format(global_std))
 
-print("Saving")
-print(heights, widths)
-np.save('heights.npy', heights)
-np.save('widths.npy', widths)

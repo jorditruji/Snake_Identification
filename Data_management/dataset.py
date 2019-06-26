@@ -63,7 +63,9 @@ class Dataset(data.Dataset):
         self.labels = labels
         self.list_IDs = list_IDs
         self.is_train = is_train
-        self.RGB_transforms_val = transforms.Compose([transforms.ToTensor()])
+        self.RGB_transforms_val = transforms.Compose([transforms.Resize((224,224)),
+                                                        transforms.ToTensor()
+                                                      ])
     def __len__(self):
         '''Denotes the total number of samples'''
         return len(self.list_IDs)
@@ -75,7 +77,7 @@ class Dataset(data.Dataset):
         # Select sample
 
         img_name = self.list_IDs[index]
-        rgb = self.read_jpg_train(img_name[3:])
+        rgb = self.read_jpg_train(img_name)
         label = self.labels[img_name]
         return rgb, label
 
