@@ -31,8 +31,7 @@ for _i, file in enumerate(imgs):
 	widths.append(width)
 	heights.append(height)
 	img = np.array(img, dtype = float)/255.0
-	width_ ,height, n_channels = img.shape
-	flatten_img = img.reshape(n_channels,width_*height)
+	flatten_img = img.reshape(n_channels,width*height)
 
 	try:
 		means.append(np.mean(flatten_img,axis=1))
