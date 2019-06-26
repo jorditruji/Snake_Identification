@@ -32,6 +32,7 @@ for file in imgs:
 	width_ ,height, n_channels = img.shape
 
 	print(img.shape, flatten_img.shape )
+	flatten_img = img.reshape(n_channels,width_*height)
 
 	try:
 		means.append(np.mean(flatten_img,axis=1))
