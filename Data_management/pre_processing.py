@@ -23,23 +23,25 @@ means = []
 stds = []
 widths = []
 heights = []
-for file in imgs:
+for _i, file in enumerate(imgs):
 
 	img, type_ = read_jpg_train(file)
 	width, height = img.size
+	widths.append(widths)
+	heights.append(heights)
 	img = np.array(img, dtype = float)/255.0
-	print("width: {}, height: {}".format(width, height))
 	width_ ,height, n_channels = img.shape
 	flatten_img = img.reshape(n_channels,width_*height)
-
-	print(img.shape, flatten_img.shape )
 
 	try:
 		means.append(np.mean(flatten_img,axis=1))
 		stds.append(np.std(flatten_img,axis=1))
 	except Exception as e:
 		print(e)
-	# Let's get means and stds: (rank [0-1])
+
+	if _i%0 == 1:
+		print("Means",means)
+		print("width: {}, height: {}".format(width, height))
 
 
 means = np.array(means)
@@ -50,3 +52,7 @@ global_std = np.mean(stds,axis = 0)
 
 print("Means: {}".format(global_mean))
 print("STDs: {}".format(global_std))
+
+
+np.save('heights.npy', heights)
+np.save('widths.npy', widths)
