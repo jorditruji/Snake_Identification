@@ -13,7 +13,7 @@ import copy
 import datetime
 from torch.autograd import Variable
 from Models.residual_attention_network import ResidualAttentionModel_92
-
+from Models.resnet import resnet18
 
 
 def train(model_ft, criterion, optimizer_ft, train_generator, val_generator, regularize = False, n_epochs= 20 , lr_scheduler = None ):
