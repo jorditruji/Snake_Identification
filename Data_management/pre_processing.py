@@ -27,10 +27,11 @@ for file in imgs:
 
 	img, type_ = read_jpg_train(file)
 	width, height = img.size
-	img = np.array(img, dtype = float)
+	img = np.array(img/255, dtype = float)
 
 	n_channels, width_ ,height = rgb.shape
 	flatten_img = rgb.reshape(n_channels,width_*height)
+	print(img.shape, flatten_img.shape )
 
 	try:
 		means.append(np.mean(flatten_img,axis=1))
