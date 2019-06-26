@@ -28,9 +28,9 @@ for file in imgs:
 	img, type_ = read_jpg_train(file)
 	width, height = img.size
 	img = np.array(img, dtype = float)/255.0
+	print("width: {}, height: {}".format(width_))
+	width_ ,height, n_channels = img.shape
 
-	n_channels, width_ ,height = img.shape
-	flatten_img = img.reshape(n_channels,width_*height)
 	print(img.shape, flatten_img.shape )
 
 	try:
