@@ -42,6 +42,7 @@ for _i, file in enumerate(imgs):
 	if _i == 1:
 		print("Means",means)
 		print("width: {}, height: {}".format(width, height))
+		break
 
 
 means = np.array(means)
