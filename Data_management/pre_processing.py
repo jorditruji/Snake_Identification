@@ -42,7 +42,7 @@ for rgb, label in training_generator:
 	label = label.numpy()
 	rgb = rgb.numpy()
 	b_size, n_channels, width_ ,height = rgb.shape
-	flatten_img = rgb.reshape(n_channels,b_sizewidth_*height)
+	flatten_img = rgb.reshape(n_channels,b_size*width_*height)
 	print(rgb.shape)
 	try:
 		means.append(np.mean(flatten_img,axis=1))
