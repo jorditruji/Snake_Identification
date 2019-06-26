@@ -39,9 +39,10 @@ for _i, file in enumerate(imgs):
 	except Exception as e:
 		print(e)
 
+
+	print("Means",means)
+	print("width: {}, height: {}".format(width, height))
 	if _i == 1:
-		print("Means",means)
-		print("width: {}, height: {}".format(width, height))
 		break
 
 
