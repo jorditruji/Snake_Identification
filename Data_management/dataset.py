@@ -64,8 +64,18 @@ class Dataset(data.Dataset):
         self.list_IDs = list_IDs
         self.is_train = is_train
         self.RGB_transforms_val = transforms.Compose([transforms.Resize((224,224)),
-                                                        transforms.ToTensor()
-                                                      ])
+                        ,transforms.ColorJitter(),
+                        ,transforms.RandomHorizontalFlip(),
+                        ,transforms.RandomVerticalFlip()
+                        ,transforms.RandomRotation(30) ,
+                        transforms.ToTensor(),
+                        ,transforms.Normalize([0.45888603, 0.45586264 0.45502368], [0.21974853, 0.22129741, 0.2209263 ])
+                          ])
+        self.RGB_transforms_train = transforms.Compose([transforms.Resize((224,224)),
+                        transforms.ToTensor(),
+                        ,transforms.Normalize([0.45888603, 0.45586264 0.45502368], [0.21974853, 0.22129741, 0.2209263 ])
+                          ])
+
     def __len__(self):
         '''Denotes the total number of samples'''
         return len(self.list_IDs)
@@ -90,7 +100,10 @@ class Dataset(data.Dataset):
             img = Image.open(f).convert('RGB')
             # Take care transparencies
             type_ = img.mode
-            img = self.RGB_transforms_val(img)
+            if self.is_train:
+                img = self.RGB_transforms_train(img)
+            else:
+                img = self.RGB_transforms_val(img)
         return img
 
 
