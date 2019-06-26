@@ -174,7 +174,7 @@ val_generator = data.DataLoader(dataset_val,**params)
 
 # Create resnet model
 #model_ft, input_size = initialize_model(model_name)
-model_ft = ResidualAttentionModel_92()
+model_ft = resnet18()
 print("Amount of parameters:")
 print(sum(p.numel() for p in model_ft.parameters()))
 
