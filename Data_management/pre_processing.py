@@ -1,6 +1,7 @@
 import numpy as np
 from PIL import Image
-from .dataset import Dataset
+from dataset import Dataset
+from torch.utils import data
 
 def read_jpg_train(file):
     '''Read and returns PIL image and type'''
@@ -19,7 +20,7 @@ def read_jpg_train(file):
 labels = np.load('labels_img.npy').item()
 imgs = np.load('partition_img.npy').item()['train']
 # Create dataset instance
-dataset = Dataset(img_part_train_net,labels)
+dataset = Dataset(imgs,labels)
 
 
 # Parameters of the generator
@@ -41,7 +42,8 @@ for rgb, label in training_generator:
 	label = label.numpy()
 	rgb = rgb.numpy()
 	b_size, n_channels, width_ ,height = rgb.shape
-	flatten_img = rgb.reshape(n_channels,width_*height)
+	flatten_img = rgb.reshape(n_channels,b_sizewidth_*height)
+	print(rgb.shape)
 	try:
 		means.append(np.mean(flatten_img,axis=1))
 		stds.append(np.std(flatten_img,axis=1))
