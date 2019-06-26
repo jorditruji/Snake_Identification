@@ -16,6 +16,20 @@ from Models.residual_attention_network import ResidualAttentionModel_92
 from Models.resnet import resnet18
 
 
+# Returns a trained resnret model in 
+def create_resnet():
+	model_ft = models.resnet18(pretrained=True)
+	num_ftrs = model_ft.fc.in_features
+	model_ft.fc = nn.Sequential(
+			nn.Linear(num_ftrs, 512),
+			nn.Dropout(p = 0.6),
+			nn.Linear(512, 45)
+	        )
+	model_ft.train()
+	return model_ft
+
+
+
 def train(model_ft, criterion, optimizer_ft, train_generator, val_generator, regularize = False, n_epochs= 20 , lr_scheduler = None ):
 	start_time = time.time()
 	# Current time 
@@ -174,7 +188,7 @@ val_generator = data.DataLoader(dataset_val,**params)
 
 # Create resnet model
 #model_ft, input_size = initialize_model(model_name)
-model_ft = resnet18()
+model_ft = create_resnet()
 print("Amount of parameters:")
 print(sum(p.numel() for p in model_ft.parameters()))
 
