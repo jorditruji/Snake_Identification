@@ -13,13 +13,13 @@ class ResidualBlock(nn.Module):
         self.stride = stride
         self.bn1 = nn.BatchNorm2d(input_channels)
         self.relu = nn.ReLU(inplace=True)
-        self.conv1 = nn.Conv2d(input_channels, output_channels/4, 1, 1, bias = False)
-        self.bn2 = nn.BatchNorm2d(output_channels/4)
+        self.conv1 = nn.Conv2d(input_channels, int(output_channels/4), 1, 1, bias = False)
+        self.bn2 = nn.BatchNorm2d(int(output_channels/4))
         self.relu = nn.ReLU(inplace=True)
-        self.conv2 = nn.Conv2d(output_channels/4, output_channels/4, 3, stride, padding = 1, bias = False)
-        self.bn3 = nn.BatchNorm2d(output_channels/4)
+        self.conv2 = nn.Conv2d(int(output_channels/4), int(output_channels/4), 3, stride, padding = 1, bias = False)
+        self.bn3 = nn.BatchNorm2d(int(output_channels/4))
         self.relu = nn.ReLU(inplace=True)
-        self.conv3 = nn.Conv2d(output_channels/4, output_channels, 1, 1, bias = False)
+        self.conv3 = nn.Conv2d(int(output_channels/4), output_channels, 1, 1, bias = False)
         self.conv4 = nn.Conv2d(input_channels, output_channels , 1, stride, bias = False)
         
     def forward(self, x):
@@ -37,3 +37,39 @@ class ResidualBlock(nn.Module):
             residual = self.conv4(out1)
         out += residual
         return out
+
+class BasicBlock(nn.Module):
+    expansion = 1
+
+    def __init__(self, inplanes, planes, stride=1, downsample=None, dilation=1):
+        super(BasicBlock, self).__init__()
+        self.conv1 = conv3x3(inplanes, planes, stride=stride, dilation=dilation)
+        self.bn1 = nn.BatchNorm2d(planes)
+        self.relu = nn.ReLU(inplace=True)
+        self.conv2 = conv3x3(planes, planes, stride=1, dilation=dilation)
+        self.bn2 = nn.BatchNorm2d(planes)
+        self.downsample = downsample
+        self.stride = stride
+
+    def forward(self, x):
+        residual = x
+
+        out = self.conv1(x)
+        out = self.bn1(out)
+        out = self.relu(out)
+
+        out = self.conv2(out)
+        out = self.bn2(out)
+
+        if self.downsample is not None:
+            residual = self.downsample(x)
+
+        out += residual
+        out = self.relu(out)
+
+        return out
+
+
+if __name__ == '__main__':
+    block = ResidualBlock(int(3),64)
+    print(block)
