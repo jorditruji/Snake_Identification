@@ -18,7 +18,7 @@ from Models.resnet import resnet18
 
 # Returns a trained resnret model in 
 def create_resnet():
-	model_ft = models.resnet18(pretrained=True)
+	model_ft = models.resnet50(pretrained=True)
 	num_ftrs = model_ft.fc.in_features
 	model_ft.fc = nn.Sequential(
 			nn.Linear(num_ftrs, 512),
@@ -175,7 +175,7 @@ img_part_val_net =  [img for img in img_part_val if img.split('.')[-1]  in ('jpg
 dataset_val = Dataset(img_part_val_net,labels, is_train = False)
 
 # Parameters
-params = {'batch_size': 256 ,
+params = {'batch_size': 128 ,
           'shuffle': True,
           'num_workers': 12,
           'pin_memory': True}
@@ -221,13 +221,15 @@ optimizer_ft = optim.SGD(model_ft.parameters(), lr=0.001, momentum=0.9)
 #exp_lr_scheduler = lr_scheduler.StepLR(optimizer_ft, step_size=6, gamma=0.5)
 exp_lr_scheduler = lr_scheduler.StepLR(optimizer_ft, step_size=7, gamma=0.1)
 res,val_labels, predicts, data_actual = train(model_ft, criterion, optimizer_ft, 
-	training_generator, val_generator, regularize = False, n_epochs= 13, lr_scheduler=exp_lr_scheduler) 
+	training_generator, val_generator, regularize = False, n_epochs= 22, lr_scheduler=exp_lr_scheduler) 
 
 '''exp_lr_scheduler)'''
 
 # Save the results:
 
 np.save('results_'+str(data_actual), res)
-
+np.save('predictions_'+str(data_actual),predicts)
+np.save('val_labels_'+str(data_actual), val_labels)
 # --- 37.59446835517883 seconds --- AWS
 # --- 141.05659770965576 seconds ---
+
