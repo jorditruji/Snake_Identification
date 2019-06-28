@@ -12,7 +12,7 @@ import os
 import copy
 import datetime
 from torch.autograd import Variable
-from Models.residual_attention_network import ResidualAttentionModel_92
+from Models.residual_attention_network import ResidualAttentionModel_92,ResidualAttentionModel_92_32input_update,  ResidualAttentionModel_92_32input
 from Models.resnet import resnet18
 
 
@@ -51,6 +51,18 @@ def train(model_ft, criterion, optimizer_ft, train_generator, val_generator, reg
 		running_corrects = 0
 
 		# Learning rate decay
+		if epoch == 1:
+			for g in optimizer_ft.param_groups:
+				g['lr'] = 0.01
+		if epoch == 3:
+			for g in  optimizer_ft.param_groups:
+				g['lr'] = 1e-3
+		if epoch == 7:
+			for g in  optimizer_ft.param_groups:
+				g['lr'] = 2e-4
+		if epoch == 10:
+			for g in  optimizer_ft.param_groups:
+				g['lr'] = 1e-4
 		if lr_scheduler:
 			lr_scheduler.step()
 
@@ -135,7 +147,7 @@ def train(model_ft, criterion, optimizer_ft, train_generator, val_generator, reg
 			best_model_wts = copy.deepcopy(model_ft.state_dict())
 			best_predicts = predicts
 			best_labels = val_labels
-			torch.save(best_model_wts, 'resnet_'+data_actual)			
+			torch.save(best_model_wts, 'attention_resnet_'+data_actual)
 
 	results = { }
 	loss = {}
@@ -175,7 +187,7 @@ img_part_val_net =  [img for img in img_part_val if img.split('.')[-1]  in ('jpg
 dataset_val = Dataset(img_part_val_net,labels, is_train = False)
 
 # Parameters
-params = {'batch_size': 128 ,
+params = {'batch_size': 48 ,
           'shuffle': True,
           'num_workers': 12,
           'pin_memory': True}
@@ -192,7 +204,8 @@ model_ft = ResidualAttentionModel_92()
 print("Amount of parameters:")
 print(sum(p.numel() for p in model_ft.parameters()))
 
-
+#model_ft.load_state_dict(torch.load('Weights/model_92_sgd.pkl'))
+model_ft.fc = nn.Sequential(nn.Dropout(p=0.5, inplace=True), nn.Linear(2048,45))
 #Regularization:
 lambda1, lambda2 = 0.5, 0.01
 
@@ -216,20 +229,21 @@ else:
 	criterion = nn.CrossEntropyLoss()
 
 #optimizer_ft = optim.Adam(model_ft.parameters(), lr=2e-4)
-optimizer_ft = optim.SGD(model_ft.parameters(), lr=0.001, momentum=0.9)
-#optimizer_ft = torch.optim.Adam(model_ft.parameters(), lr=2e-4, betas=(0.9, 0.999), eps=1e-08, weight_decay=4e-5)
+#optimizer_ft = optim.SGD(model_ft.parameters(), lr=0.005, momentum=0.9)
+optimizer_ft = optim.SGD(model_ft.parameters(), lr=1e-1, momentum=0.9, nesterov=True, weight_decay=0.0001)
+#optimizer_ft = torch.optim.Adam(model_ft.parameters(), lr=1e-3, betas=(0.9, 0.999), eps=1e-08, weight_decay=4e-5)
 #exp_lr_scheduler = lr_scheduler.StepLR(optimizer_ft, step_size=6, gamma=0.5)
-exp_lr_scheduler = lr_scheduler.StepLR(optimizer_ft, step_size=7, gamma=0.1)
+decayer = lr_scheduler.StepLR(optimizer_ft, step_size=10, gamma=0.1)
 res,val_labels, predicts, data_actual = train(model_ft, criterion, optimizer_ft, 
-	training_generator, val_generator, regularize = False, n_epochs= 22, lr_scheduler=exp_lr_scheduler) 
+        training_generator, val_generator, regularize = False, n_epochs= 22, lr_scheduler = None ) 
 
 '''exp_lr_scheduler)'''
 
 # Save the results:
 
-np.save('results_'+str(data_actual), res)
-np.save('predictions_'+str(data_actual),predicts)
-np.save('val_labels_'+str(data_actual), val_labels)
+np.save('att_results_'+str(data_actual), res)
+np.save('att_predictions_'+str(data_actual),predicts)
+np.save('att_val_labels_'+str(data_actual), val_labels)
 # --- 37.59446835517883 seconds --- AWS
 # --- 141.05659770965576 seconds ---
 
