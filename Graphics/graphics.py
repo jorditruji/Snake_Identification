@@ -24,8 +24,21 @@ class Results_writter():
         self.config = config
         self.results = results
         self.cm = confusion_matrix(labels, predictions)
-        self.class_names = ['AnyConnect', 'Interflex', 'Word', 'Outlook', 'Skype']
+        self.class_names = self.translate_idx_class_name()
         self.data_actual = data_actual
+
+
+    def translate_idx_class_name(self):
+        idx_2_name = np.load('../Data_management/class2folder.npy').item()
+        class_2_snake_csv = np.loadtxt(open("class_id_maapping.csv", "rb"), dtype = str, delimiter=",", skiprows=1)
+        class_2_snake = {}
+        for line in class_2_snake_csv:
+            class_2_snake[line[0]]= line[1]
+        class_names = []
+        for k,v in idx_2_name.items():
+            class_names.append(class_2_snake[v])
+        return class_names
+
 
     def save(self):
         # Conf matrix
