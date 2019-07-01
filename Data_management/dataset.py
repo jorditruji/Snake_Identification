@@ -67,8 +67,8 @@ class Dataset(data.Dataset):
                         ,transforms.ColorJitter()
                         ,transforms.RandomHorizontalFlip()
                         ,transforms.RandomVerticalFlip()
-                        ,transforms.RandomRotation(30) ,
-                        transforms.ToTensor()
+                        #,transforms.RandomRotation(30) ,
+                        , transforms.ToTensor()
                         ,transforms.Normalize([0.45888603, 0.45586264, 0.45502368], [0.21974853, 0.22129741, 0.2209263 ])
                           ])
         self.RGB_transforms_train = transforms.Compose([transforms.Resize((224,224)),
