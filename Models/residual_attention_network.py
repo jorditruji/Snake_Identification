@@ -75,7 +75,7 @@ class ResidualAttentionModel_92(nn.Module):
     def __init__(self):
         super(ResidualAttentionModel_92, self).__init__()
         self.conv1 = nn.Sequential(
-            nn.Conv2d(3, 64, kernel_size=5, stride=2, padding=3, bias = False),
+            nn.Conv2d(3, 64, kernel_size=7, stride=2, padding=3, bias = False),
             nn.BatchNorm2d(64),
             nn.ReLU(inplace=True)
         )
@@ -97,7 +97,7 @@ class ResidualAttentionModel_92(nn.Module):
             nn.ReLU(inplace=True),
             nn.AvgPool2d(kernel_size=7, stride=1)
         )
-        self.fc = nn.Linear(2048,10)
+        self.fc = nn.Linear(2048,45)
 
     def forward(self, x):
         out = self.conv1(x)
