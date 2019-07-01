@@ -29,7 +29,7 @@ def save_partition(data,labels,name):
 
 
 
-path = '/mnt/disks/dades/train/'
+path = '/home/jordimoreratrujillo/train/'
 files = read_from_folder(path)
 
 labels = []
