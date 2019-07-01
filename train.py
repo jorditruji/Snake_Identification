@@ -18,7 +18,7 @@ from Models.resnet import resnet18
 
 # Returns a trained resnret model in 
 def create_resnet():
-	model_ft = models.resnet50(pretrained=True)
+	model_ft = models.resnet152(pretrained=True)
 	num_ftrs = model_ft.fc.in_features
 	model_ft.fc = nn.Sequential(
 			nn.Linear(num_ftrs, 512),
@@ -219,7 +219,7 @@ else:
 optimizer_ft = optim.SGD(model_ft.parameters(), lr=0.001, momentum=0.9)
 #optimizer_ft = torch.optim.Adam(model_ft.parameters(), lr=2e-4, betas=(0.9, 0.999), eps=1e-08, weight_decay=4e-5)
 #exp_lr_scheduler = lr_scheduler.StepLR(optimizer_ft, step_size=6, gamma=0.5)
-exp_lr_scheduler = lr_scheduler.StepLR(optimizer_ft, step_size=7, gamma=0.1)
+exp_lr_scheduler = lr_scheduler.StepLR(optimizer_ft, step_size=7, gamma=0.2)
 res,val_labels, predicts, data_actual = train(model_ft, criterion, optimizer_ft, 
 	training_generator, val_generator, regularize = False, n_epochs= 22, lr_scheduler=exp_lr_scheduler) 
 

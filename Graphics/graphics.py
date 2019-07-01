@@ -2,6 +2,8 @@ import numpy as np
 import matplotlib 
 matplotlib.use('Agg')
 matplotlib.rcParams['agg.path.chunksize'] = 10000
+matplotlib.rcParams["savefig.jpeg_quality"] = 100
+matplotlib.rcParams["savefig.dpi"] = 2000
 from matplotlib import path, rcParams
 import matplotlib.pyplot as plt
 from sklearn.metrics import confusion_matrix
@@ -25,6 +27,7 @@ class Results_writter():
         self.results = results
         self.cm = confusion_matrix(labels, predictions)
         self.class_names = self.translate_idx_class_name()
+        print(self.class_names)
         self.data_actual = data_actual
 
 
@@ -36,21 +39,22 @@ class Results_writter():
             class_2_snake[line[0]]= line[1]
         class_names = []
         for k,v in idx_2_name.items():
-            class_names.append(class_2_snake[v])
+            print(v,class_2_snake.values())
+            class_names.append(list(class_2_snake.keys())[list(class_2_snake.values()).index(str(v.split('-')[-1]))])
         return class_names
 
 
     def save(self):
         # Conf matrix
-        self.plot_confusion_matrix(self.cm,'Captures/confusion_'+self.model_name+'_'+self.data_actual, self.class_names  )
+        self.plot_confusion_matrix(self.cm,'confusion_'+self.model_name+'_'+self.data_actual, self.class_names  )
 
         # Losses and accus
-        self.plot_losses(self.results, 'Captures/losses_'+self.model_name+'_'+self.data_actual)
+        self.plot_losses(self.results, 'losses_'+self.model_name+'_'+self.data_actual)
 
         # Save vectors of losses and accus
-        self.save_results_disk('Results/res_'+self.model_name+'_'+self.data_actual)
+        self.save_results_disk('res_'+self.model_name+'_'+self.data_actual)
 
-        self.insert_sql()
+        #self.insert_sql()
 
     def save_results_disk(self, filename):
         np.save(filename, self.results)
@@ -88,9 +92,9 @@ class Results_writter():
         ax.set_yticks([y for y in range(len(labels))])
         # Place labels on minor ticks
         ax.set_xticks([x + 0.5 for x in range(len(labels))], minor=True)
-        ax.set_xticklabels(labels, rotation='90', fontsize=10, minor=True)
+        ax.set_xticklabels(labels, rotation='90', fontsize=5, minor=True)
         ax.set_yticks([y + 0.5 for y in range(len(labels))], minor=True)
-        ax.set_yticklabels(labels[::-1], fontsize=10, minor=True)
+        ax.set_yticklabels(labels[::-1], fontsize=5, minor=True)
         # Hide major tick labels
         ax.tick_params(which='major', labelbottom='off', labelleft='off')
         # Finally, hide minor tick marks
@@ -105,7 +109,7 @@ class Results_writter():
             for col in range(len(matrix[row])):
                 confusion = matrix[::-1][row][col]
                 if confusion != 0:
-                    ax.text(col + 0.5, row + 0.5, confusion, fontsize=9,
+                    ax.text(col + 0.5, row + 0.5, confusion, fontsize=2,
                         horizontalalignment='center',
                         verticalalignment='center')
 
@@ -140,3 +144,15 @@ class Results_writter():
         plt.close()
         return filename+'.png'
     
+
+
+
+if __name__ == '__main__':
+    data_actual = '2019-06-27_18-57-51'
+
+    path = '/home/jordi/Desktop/Snake_results/'
+    res = np.load(path+'results_'+data_actual+'.npy').item()
+    pred = np.load(path+'predictions_'+data_actual+'.npy')
+    labels = np.load(path+'val_labels_'+data_actual+'.npy')
+    grafer = Results_writter('resnet101', '', res, pred, labels, data_actual)
+    grafer.save()
