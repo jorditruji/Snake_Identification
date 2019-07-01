@@ -50,19 +50,6 @@ def train(model_ft, criterion, optimizer_ft, train_generator, val_generator, reg
 		running_loss = 0.0
 		running_corrects = 0
 
-		# Learning rate decay
-		if epoch == 1:
-			for g in optimizer_ft.param_groups:
-				g['lr'] = 0.01
-		if epoch == 3:
-			for g in  optimizer_ft.param_groups:
-				g['lr'] = 1e-3
-		if epoch == 7:
-			for g in  optimizer_ft.param_groups:
-				g['lr'] = 2e-4
-		if epoch == 10:
-			for g in  optimizer_ft.param_groups:
-				g['lr'] = 1e-4
 		if lr_scheduler:
 			lr_scheduler.step()
 
@@ -230,12 +217,12 @@ else:
 
 #optimizer_ft = optim.Adam(model_ft.parameters(), lr=2e-4)
 #optimizer_ft = optim.SGD(model_ft.parameters(), lr=0.005, momentum=0.9)
-optimizer_ft = optim.SGD(model_ft.parameters(), lr=1e-1, momentum=0.9, nesterov=True, weight_decay=0.0001)
-#optimizer_ft = torch.optim.Adam(model_ft.parameters(), lr=1e-3, betas=(0.9, 0.999), eps=1e-08, weight_decay=4e-5)
+#optimizer_ft = optim.SGD(model_ft.parameters(), lr=1e-1, momentum=0.9, nesterov=True, weight_decay=0.0001)
+optimizer_ft = torch.optim.Adam(model_ft.parameters(), lr=1e-3, betas=(0.9, 0.999), eps=1e-08, weight_decay=4e-5)
 #exp_lr_scheduler = lr_scheduler.StepLR(optimizer_ft, step_size=6, gamma=0.5)
 decayer = lr_scheduler.StepLR(optimizer_ft, step_size=10, gamma=0.1)
 res,val_labels, predicts, data_actual = train(model_ft, criterion, optimizer_ft, 
-        training_generator, val_generator, regularize = False, n_epochs= 22, lr_scheduler = None ) 
+        training_generator, val_generator, regularize = False, n_epochs= 10, lr_scheduler = None ) 
 
 '''exp_lr_scheduler)'''
 

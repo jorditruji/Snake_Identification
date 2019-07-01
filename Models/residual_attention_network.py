@@ -75,7 +75,7 @@ class ResidualAttentionModel_92(nn.Module):
     def __init__(self):
         super(ResidualAttentionModel_92, self).__init__()
         self.conv1 = nn.Sequential(
-            nn.Conv2d(3, 64, kernel_size=7, stride=2, padding=3, bias = False),
+            nn.Conv2d(3, 64, kernel_size=5, stride=2, padding=3, bias = False),
             nn.BatchNorm2d(64),
             nn.ReLU(inplace=True)
         )
